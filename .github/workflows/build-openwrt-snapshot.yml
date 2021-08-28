@@ -85,6 +85,7 @@ env:
   UPLOAD_BIN_DIR: false
   UPLOAD_FIRMWARE: true
   UPLOAD_RELEASE: true
+  DOWNLOAD_ARTIFACT: true
 #############################
   UPLOAD_GOFILE: false
   UPLOAD_LITTERBOX: false
@@ -653,6 +654,17 @@ jobs:
       with:
         name: OpenWrt_firmware${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
         path: ${{ env.FIRMWARE }}
+
+    - name: Download Artifacts
+      uses: actions/download-artifact@v2
+      if: env.DOWNLOAD_ARTIFACT == 'true' && !cancelled()
+      with:
+        name: OpenWrt_bin_packages${{ env.DEVICE_NAME }}${{ env.FILE_DATE }}
+        path: ${{ env.FIRMWARE }}
+
+    - name: 'Echo download path'
+      if: env.DOWNLOAD_ARTIFACT == 'true' && !cancelled()
+      run: echo ${{steps.download.outputs.download-path}}
 
 ############################################################################################################################
 
